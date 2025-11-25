@@ -1,0 +1,131 @@
+#!/bin/bash
+#
+# DNShield postinstall script
+# Loads the system extension after installation
+#
+
+# Exit on error
+set -e
+
+echo "DNShield postinstall: Starting..."
+
+# Kill existing DNShield menu bar app if running
+if pgrep -x "DNShield" >/dev/null; then
+    echo "Stopping existing DNShield menu bar app..."
+    killall DNShield 2>/dev/null || true
+    sleep 1
+fi
+
+# Check if DNShield extension is already running and compare versions
+# Note: Check for both old and new bundle IDs during migration period
+CURRENT_EXT_VERSION=""
+if /usr/bin/systemextensionsctl list | grep -E "(com\.dnshield\.extension|com\.dnshield\.extension).*\[activated enabled\]" >/dev/null; then
+    # Extract current extension version (the build number after the slash)
+    # Try new bundle ID first
+    CURRENT_EXT_VERSION=$(/usr/bin/systemextensionsctl list | grep "com\.dnshield\.extension.*\[activated enabled\]" | sed -E 's/.*\(([0-9.]+)\/([0-9.]+)\).*/\2/' | head -1)
+    
+    # If not found, try old bundle ID
+    if [ -z "$CURRENT_EXT_VERSION" ]; then
+        CURRENT_EXT_VERSION=$(/usr/bin/systemextensionsctl list | grep "com\.dnshield\.extension.*\[activated enabled\]" | sed -E 's/.*\(([0-9.]+)\/([0-9.]+)\).*/\2/' | head -1)
+        if [ -n "$CURRENT_EXT_VERSION" ]; then
+            echo "Note: Old extension bundle ID detected, migration required"
+        fi
+    fi
+    
+    # Check if version extraction succeeded (non-empty and matches version pattern)
+    if [[ -z "$CURRENT_EXT_VERSION" || ! "$CURRENT_EXT_VERSION" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+        echo "Warning: Failed to extract system extension version, will force update."
+        CURRENT_EXT_VERSION=""
+    else
+        echo "Current system extension version: $CURRENT_EXT_VERSION"
+    fi
+fi
+
+# Get new app version (use CFBundleVersion for full version including build number)
+NEW_APP_VERSION=$(/usr/bin/defaults read /Applications/DNShield.app/Contents/Info.plist CFBundleVersion 2>/dev/null || echo "")
+echo "New app version: $NEW_APP_VERSION"
+
+# Force update if versions are different or if no extension is running
+if [ -n "$CURRENT_EXT_VERSION" ] && [ "$CURRENT_EXT_VERSION" = "$NEW_APP_VERSION" ]; then
+    echo "DNShield extension version $CURRENT_EXT_VERSION is already active and matches app version, skipping activation"
+else
+    if [ -n "$CURRENT_EXT_VERSION" ]; then
+        echo "Version mismatch detected (extension: $CURRENT_EXT_VERSION, app: $NEW_APP_VERSION). Updating system extension..."
+    else
+        echo "No active system extension found. Loading DNShield system extension..."
+    fi
+    
+    # Launch the app with --load-system-extension flag
+    # This will request system extension activation/replacement and exit
+    /Applications/DNShield.app/Contents/MacOS/DNShield --load-system-extension &
+    
+    # Give it a moment to start and handle the system extension request
+    sleep 3
+    
+    echo "System extension activation/update requested"
+fi
+
+# Enable the network filter if extension is active
+if /usr/bin/systemextensionsctl list | grep "com.dnshield.extension.*\[activated enabled\]" >/dev/null; then
+    echo "Enabling DNShield network filter..."
+    # Use the daemon to enable the filter if available
+    if [ -x /usr/local/bin/dnshield-ctl ]; then
+        /usr/local/bin/dnshield-ctl enable 2>/dev/null || true
+    fi
+fi
+
+# Create symlinks from /usr/local/bin to app bundle 
+echo "Creating symlinks for command-line tools..."
+# Ensure /usr/local/bin exists
+mkdir -p /usr/local/bin
+
+# Remove existing files/symlinks first
+rm -f /usr/local/bin/dnshield-ctl 2>/dev/null || true
+rm -f /usr/local/bin/dnshield-daemon 2>/dev/null || true
+rm -f /usr/local/bin/dnshield-xpc 2>/dev/null || true
+rm -f /usr/local/bin/dnshield-watchdog 2>/dev/null || true
+
+# Create symlinks to app bundle
+ln -sf /Applications/DNShield.app/Contents/MacOS/dnshield-ctl /usr/local/bin/dnshield-ctl
+ln -sf /Applications/DNShield.app/Contents/MacOS/dnshield-daemon /usr/local/bin/dnshield-daemon
+ln -sf /Applications/DNShield.app/Contents/MacOS/dnshield-xpc /usr/local/bin/dnshield-xpc
+if [ -f /Applications/DNShield.app/Contents/MacOS/dnshield-watchdog ]; then
+    ln -sf /Applications/DNShield.app/Contents/MacOS/dnshield-watchdog /usr/local/bin/dnshield-watchdog
+fi
+
+# Create and fix permissions for command directories
+echo "Setting up command directories..."
+mkdir -p "/Library/Application Support/DNShield/Commands/incoming"
+mkdir -p "/Library/Application Support/DNShield/Commands/responses"
+chmod 1777 "/Library/Application Support/DNShield/Commands/incoming"
+chmod 755 "/Library/Application Support/DNShield/Commands/responses"
+mkdir -p "/var/log/dnshield"
+
+# Preferences are now installed directly via the package
+# The com.dnshield.app.plist file is already in place at /Library/Preferences/
+
+# Load the daemon if installed
+if [ -f /Library/LaunchDaemons/com.dnshield.daemon.plist ]; then
+    echo "Loading DNShield daemon..."
+    /bin/launchctl load -w /Library/LaunchDaemons/com.dnshield.daemon.plist 2>/dev/null || true
+    /bin/launchctl start com.dnshield.daemon 2>/dev/null || true
+fi
+
+# Reload the watchdog LaunchDaemon so the latest binary is active
+WATCHDOG_PLIST="/Library/LaunchDaemons/com.dnshield.watchdog.plist"
+if [ -f "$WATCHDOG_PLIST" ]; then
+    echo "Reloading DNShield watchdog LaunchDaemon..."
+    if /bin/launchctl print system/com.dnshield.watchdog >/dev/null 2>&1; then
+        /bin/launchctl bootout system "$WATCHDOG_PLIST" 2>/dev/null || \
+        /bin/launchctl unload "$WATCHDOG_PLIST" 2>/dev/null || true
+    fi
+    /bin/launchctl bootstrap system "$WATCHDOG_PLIST" 2>/dev/null || \
+    /bin/launchctl load -w "$WATCHDOG_PLIST" 2>/dev/null || true
+    /bin/launchctl kickstart -k system/com.dnshield.watchdog 2>/dev/null || true
+fi
+
+# Reopen DNShield menu bar app
+echo "Starting DNShield menu bar app..."
+open -a DNShield 2>/dev/null || true
+
+echo "DNShield postinstall: Complete"

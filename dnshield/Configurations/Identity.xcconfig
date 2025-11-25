@@ -1,0 +1,23 @@
+// This file is auto-generated. Run make identity to update.
+DN_IDENTITY_NAME = gemini
+DN_DISPLAY_NAME = DNShield
+DN_BUNDLE_PREFIX = com.gemini
+DN_DOMAIN_NAME = dnshield
+DN_TEAM_ID = P4LZFPM2NH
+
+DN_APP_BUNDLE_ID = com.gemini.dnshield.app
+DN_EXTENSION_BUNDLE_ID = com.gemini.dnshield.extension
+DN_DAEMON_BUNDLE_ID = com.dnshield.daemon
+DN_PREFERENCE_DOMAIN = com.gemini.dnshield.app
+DN_APP_GROUP_IDENTIFIER = group.com.gemini.dnshield
+DN_MACH_SERVICE_NAME = com.dnshield.daemon.xpc
+DN_EXTENSION_PRODUCT_NAME = com.gemini.dnshield.extension
+DN_EXTENSION_SYSTEM_EXTENSION_ID = com.gemini.dnshield.extension.systemextension
+DN_EXTENSION_XPC_IDENTIFIER = com.gemini.dnshield.extension.xpc
+
+DN_APP_CODE_SIGN_IDENTITY = Developer ID Application: Gemini Trust Company, LLC (P4LZFPM2NH)
+DN_EXTENSION_CODE_SIGN_IDENTITY = Developer ID Application: Gemini Trust Company, LLC (P4LZFPM2NH)
+DN_INSTALLER_CODE_SIGN_IDENTITY = Developer ID Installer: Gemini Trust Company, LLC (P4LZFPM2NH)
+
+DN_APP_PROVISIONING_PROFILE = DNShield - Application Profile
+DN_EXTENSION_PROVISIONING_PROFILE = DNShield - Extension Profile

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Blocked - DNShield</title>
+    <link rel="stylesheet" href="css/blocked.css">
+</head>
+<body>
+    <div class="container">
+        <div class="shield-icon">
+            <svg viewBox="0 0 24 24" width="80" height="80">
+                <path fill="#e74c3c" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.1,7 14,7.9 14,9C14,10.1 13.1,11 12,11C10.9,11 10,10.1 10,9C10,7.9 10.9,7 12,7M12,13C14.21,13 16,14.79 16,17H8C8,14.79 9.79,13 12,13Z"/>
+            </svg>
+        </div>
+
+        <h1>Access Blocked</h1>
+
+        <div class="message">
+            <p class="domain" id="blocked-domain">Loading...</p>
+            <p class="reason">This site has been blocked by your organization's security policy.</p>
+        </div>
+
+        <div class="details">
+            <h3>Why was this blocked?</h3>
+            <p>DNShield has blocked this domain based on your configured DNS filtering rules.</p>
+
+            <div class="info-box">
+                <p><strong>Blocked URL:</strong> <span id="blocked-url"></span></p>
+                <p><strong>Process:</strong> <span id="blocked-process"></span></p>
+                <p><strong>Time:</strong> <span id="block-time"></span></p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="go-back" class="btn btn-primary">Go Back</button>
+            <button id="new-tab" class="btn btn-secondary">New Tab</button>
+        </div>
+
+        <div class="footer">
+            <p>If you believe this is a mistake, please submit a request for review.</p>
+            <a href="" target="_blank" class="btn btn-primary">Request Access</a>
+            <button id="view-history" class="btn-link">View Block History</button>
+        </div>
+    </div>
+
+    <script src="js/blocked.js"></script>
+</body>
+</html>

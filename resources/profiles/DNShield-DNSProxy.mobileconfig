@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Configures DNS Proxy settings for DNShield</string>
+			<key>PayloadDisplayName</key>
+			<string>DNShield DNS Proxy</string>
+			<key>PayloadIdentifier</key>
+			<string>com.dnshield.dns-proxy.config</string>
+			<key>PayloadType</key>
+			<string>com.apple.dnsProxy.managed</string>
+			<key>PayloadUUID</key>
+			<string>B4E5C8D2-3F6A-4B8C-9D1E-2A7F9C5B4E3D</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>AppBundleIdentifier</key>
+			<string>com.dnshield.app</string>
+			<key>ProviderBundleIdentifier</key>
+			<string>com.dnshield.extension</string>
+			<key>ProviderDesignatedRequirement</key>
+			<string>anchor apple generic and identifier "com.dnshield.extension" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = C6F9Y6M584)</string>
+			<key>ProviderConfiguration</key>
+			<dict>
+				<key>EnableWebSocketServer</key>
+				<true/>
+				<key>WebSocketPort</key>
+				<integer>8080</integer>
+			</dict>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Configures DNShield DNS Proxy Network Extension</string>
+	<key>PayloadDisplayName</key>
+	<string>DNShield DNS Proxy Configuration</string>
+	<key>PayloadIdentifier</key>
+	<string>com.dnshield.dns-proxy-profile</string>
+	<key>PayloadOrganization</key>
+	<string>DNShield</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>A7D4B3C9-8E2F-4A5B-BC6D-1E9F8D7C3A2B</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

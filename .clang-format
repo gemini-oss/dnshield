@@ -1,0 +1,52 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+
+IndentWidth: 2
+UseTab: Never
+
+ColumnLimit: 100
+
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortBlocksOnASingleLine: Never
+
+SpacesInContainerLiterals: true
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterForeachMacros: false
+
+InsertNewlineAtEOF: true
+
+---
+Language: ObjC
+BasedOnStyle: Google
+
+IndentWidth: 2
+ObjCBlockIndentWidth: 2
+UseTab: Never
+
+ColumnLimit: 100
+
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortBlocksOnASingleLine: Never
+
+SpacesInContainerLiterals: true
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterForeachMacros: false
+
+InsertNewlineAtEOF: true

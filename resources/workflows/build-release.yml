@@ -1,0 +1,400 @@
+name: Build Release Package
+
+# Default to minimal permissions for all jobs
+permissions:
+  contents: read
+
+# Concurrency: Cancel in-progress builds on the same branch/tag
+# But allow tag and branch builds to run simultaneously
+concurrency:
+  group: build-release-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "VERSION"
+      - "dnshield/**"
+    tags:
+      - "v*" # Trigger on version tags like v1.0.0
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      version:
+        description: "Version number (e.g., 1.0.0)"
+        required: false
+        type: string
+      force_release:
+        description: "Force create a release even if version exists"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  check_release_needed:
+    name: Check if Release Needed
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+      is_tag: ${{ steps.check.outputs.is_tag }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Check if release is needed
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REF: ${{ github.ref }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          FORCE_RELEASE: ${{ github.event.inputs.force_release }}
+        run: |
+          # Determine version
+          if [[ "$EVENT_NAME" == "push" && "$GITHUB_REF" == refs/tags/* ]]; then
+            # Tag push - always release
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            # Branch push or manual trigger
+            VERSION="$INPUT_VERSION"
+            if [[ -z "$VERSION" ]]; then
+              # Read current version from file
+              VERSION=$(cat VERSION)
+            fi
+
+            # Check if we should force a release
+            if [[ "$FORCE_RELEASE" == "true" ]]; then
+              echo "should_release=true" >> $GITHUB_OUTPUT
+              echo "is_tag=false" >> $GITHUB_OUTPUT
+            else
+              # Check latest release version
+              LATEST_RELEASE=$(gh api repos/${GITHUB_REPOSITORY}/releases/latest --jq '.tag_name' 2>/dev/null || echo "v0.0.0")
+              LATEST_VERSION=${LATEST_RELEASE#v}
+
+              echo "Current version: $VERSION"
+              echo "Latest release: $LATEST_VERSION"
+
+              # Compare versions using sort -V (version sort)
+              if [ "$VERSION" != "$LATEST_VERSION" ] && [ "$(printf '%s\n' "$VERSION" "$LATEST_VERSION" | sort -V | head -n1)" = "$LATEST_VERSION" ]; then
+                echo "Version $VERSION is newer than $LATEST_VERSION - will create release"
+                echo "should_release=true" >> $GITHUB_OUTPUT
+                echo "is_tag=false" >> $GITHUB_OUTPUT
+              else
+                echo "Version $VERSION is not newer than $LATEST_VERSION - skipping release"
+                echo "should_release=false" >> $GITHUB_OUTPUT
+                echo "is_tag=false" >> $GITHUB_OUTPUT
+              fi
+            fi
+          fi
+
+          # Sanitize VERSION for artifact naming
+          VERSION="${VERSION//\//-}"  # Replace forward slashes with dashes
+          VERSION="${VERSION//:/-}"   # Replace colons with dashes
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Final version for build: $VERSION"
+
+  build_with_signing:
+    name: Build macOS Release
+    runs-on: macos-latest
+    needs: check_release_needed
+    if: success() # Always build, even if no release needed (for artifacts)
+    permissions:
+      contents: write # For uploading artifacts
+      id-token: write # For attestation if needed
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          APPLE_DEVELOPER_ID_APPLICATION_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}
+          APPLE_DEVELOPER_ID_APPLICATION_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_PASSWORD }}
+          APPLE_DEVELOPER_ID_INSTALLER_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_INSTALLER }}
+          APPLE_DEVELOPER_ID_INSTALLER_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_INSTALLER_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          BUILD_PROVISION_PROFILE_APP_BASE64: ${{ secrets.APP_PROVISIONING_PROFILE }}
+          BUILD_PROVISION_PROFILE_EXTENSION_BASE64: ${{ secrets.EXTENSION_PROVISIONING_PROFILE }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          APP_CERTIFICATE_PATH=$RUNNER_TEMP/app_certificate.p12
+          INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/installer_certificate.p12
+          EXTENSION_PROVISIONING_PROFILE_PATH=$RUNNER_TEMP/build_extension_profile.provisionprofile
+          APP_PROVISIONING_PROFILE_PATH=$RUNNER_TEMP/build_app_profile.provisionprofile
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # Import application certificate
+          echo "$APPLE_DEVELOPER_ID_APPLICATION_BASE64" | base64 --decode -o $APP_CERTIFICATE_PATH
+          security import $APP_CERTIFICATE_PATH -P "$APPLE_DEVELOPER_ID_APPLICATION_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/codesign
+
+          # Import installer certificate
+          echo "$APPLE_DEVELOPER_ID_INSTALLER_BASE64" | base64 --decode -o $INSTALLER_CERTIFICATE_PATH
+          security import $INSTALLER_CERTIFICATE_PATH -P "$APPLE_DEVELOPER_ID_INSTALLER_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -T /usr/bin/productbuild
+
+          # Set key partition list
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # Import provisioning profiles
+          echo -n "$BUILD_PROVISION_PROFILE_APP_BASE64" | base64 --decode -o $APP_PROVISIONING_PROFILE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_EXTENSION_BASE64" | base64 --decode -o $EXTENSION_PROVISIONING_PROFILE_PATH
+
+          # Install provisioning profiles
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $APP_PROVISIONING_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $EXTENSION_PROVISIONING_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: latest-stable
+
+      - name: Set version
+        env:
+          CHECK_VERSION: ${{ needs.check_release_needed.outputs.version }}
+        run: |
+          # Use version from check job
+          VERSION="$CHECK_VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Using version: $VERSION"
+
+      - name: Setup Go
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+        with:
+          go-version: "1.21"
+
+      # Build manifest-editor and packages separately for better parallelization
+      - name: Build and sign manifest-editor tool
+        env:
+          DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
+        run: |
+          # Build universal manifest-editor binary using make
+          echo "Building universal manifest-editor binary..."
+          make tools
+
+          # Create directory for tools
+          mkdir -p dnshield/dist/enterprise/tools
+
+          # Create zip with the signed binary
+          echo "Creating manifest-editor.zip..."
+          cd tools/build
+          zip manifest-editor.zip manifest-editor
+
+          # Move to release directory
+          mv manifest-editor.zip ../../dnshield/dist/enterprise/tools/
+
+      - name: Build package
+        env:
+          DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
+          INSTALLER_IDENTITY: ${{ secrets.INSTALLER_IDENTITY }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_PASSWORD: ${{ secrets.APPLE_APP_SECRET }}
+        run: |
+          chmod +x resources/package/build_enterprise.sh
+
+          # Build standard enterprise version with notarization
+          echo "Building standard enterprise package..."
+          make mac-app-enterprise
+
+          # Save the standard package
+          mkdir -p artifacts
+          cp dnshield/dist/enterprise/DNShield-*.pkg artifacts/
+
+      - name: Create app zip and generate checksums
+        run: |
+          cd dnshield/dist/enterprise
+
+          # Create zip of the app for distribution
+          if [ -d "DNShield.app" ]; then
+            echo "Creating DNShield.app.zip..."
+            ditto -c -k --keepParent DNShield.app DNShield.app.zip
+          fi
+
+          # Generate SHA256 checksums for all packages and tools
+          for file in *.pkg *.zip; do
+            if [ -f "$file" ]; then
+              shasum -a 256 "$file" > "${file}.sha256"
+            fi
+          done
+
+          # Generate checksums for tools
+          if [ -d "tools" ]; then
+            cd tools
+            for file in *.zip; do
+              if [ -f "$file" ]; then
+                shasum -a 256 "$file" > "${file}.sha256"
+              fi
+            done
+            cd ..
+          fi
+
+          # Create checksums file
+          cat *.sha256 tools/*.sha256 2>/dev/null > checksums.txt || echo "No checksums generated" > checksums.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
+        with:
+          name: dnshield-macos-${{ env.VERSION }}
+          path: |
+            dnshield/dist/enterprise/DNShield-*.pkg
+            dnshield/dist/enterprise/DNShield-*.pkg.sha256
+            dnshield/dist/enterprise/DNShield.app.zip
+            dnshield/dist/enterprise/DNShield.app.zip.sha256
+            dnshield/dist/enterprise/tools/manifest-editor.zip
+            dnshield/dist/enterprise/tools/manifest-editor.zip.sha256
+            dnshield/dist/enterprise/checksums.txt
+
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [check_release_needed, build_with_signing]
+    if: needs.check_release_needed.outputs.should_release == 'true'
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0 # Fetch full history for changelog generation
+
+      - name: Set version
+        env:
+          CHECK_VERSION: ${{ needs.check_release_needed.outputs.version }}
+        run: |
+          VERSION="$CHECK_VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Using version: $VERSION"
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        with:
+          name: dnshield-macos-${{ needs.check_release_needed.outputs.version }}
+          path: artifacts/
+
+      # Changelog generation moved to separate workflow: update-changelog.yml
+      # The changelog workflow will be triggered automatically when a release is published
+
+      - name: Create release notes
+        run: |
+          cat > release_notes.md << EOF
+          # DNShield ${{ env.VERSION }}
+
+          ## Installation Options
+
+          ### Standard Installer Package (Recommended for most users)
+          Download \`DNShield-${{ env.VERSION }}.pkg\` and double-click to install.
+          This package is signed and notarized by Apple.
+
+          ### Manual Installation
+          Download \`DNShield.app.zip\`, extract, and move to Applications.
+          The app is signed and notarized by Apple.
+
+          ### Management Tools
+          Download \`manifest-editor.zip\` for the DNShield Manifest Editor tool.
+          This signed binary provides a web interface for managing DNS manifests and rules.
+          Run with: \`./manifest-editor\` (starts server at http://localhost:7777)
+
+          ## Checksums
+
+          \`\`\`
+          $(cat artifacts/checksums.txt)
+          \`\`\`
+          ## Recent Changes
+
+          For complete details, see [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
+
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
+        with:
+          tag_name: ${{ needs.check_release_needed.outputs.is_tag == 'true' && github.ref_name || format('v{0}', env.VERSION) }}
+          name: DNShield ${{ env.VERSION }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+          files: |
+            artifacts/DNShield-*.pkg
+            artifacts/DNShield-*.pkg.sha256
+            artifacts/DNShield.app.zip
+            artifacts/DNShield.app.zip.sha256
+            artifacts/manifest-editor.zip
+            artifacts/manifest-editor.zip.sha256
+            artifacts/checksums.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [check_release_needed, build_with_signing, create_release]
+    if: always()
+    permissions:
+      contents: read
+
+    steps:
+      - name: Build Status Summary
+        env:
+          VERSION: ${{ needs.check_release_needed.outputs.version }}
+          BUILD_STATUS: ${{ needs.build_with_signing.result }}
+          SHOULD_RELEASE: ${{ needs.check_release_needed.outputs.should_release }}
+          IS_TAG: ${{ needs.check_release_needed.outputs.is_tag }}
+          RELEASE_STATUS: ${{ needs.create_release.result }}
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Version Information" >> $GITHUB_STEP_SUMMARY
+          echo "- Version: **${VERSION}**" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Status: **${BUILD_STATUS}**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "$SHOULD_RELEASE" == "true" ]]; then
+            echo "### Release Status" >> $GITHUB_STEP_SUMMARY
+            if [[ "$IS_TAG" == "true" ]]; then
+              echo "**Release will be created** (triggered by tag push)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "**Release will be created** (version ${VERSION} is newer than latest release)" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "- Release Status: **${RELEASE_STATUS}**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Release Status" >> $GITHUB_STEP_SUMMARY
+            echo "⏭️ **No release needed** (version already exists or not newer)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts Built" >> $GITHUB_STEP_SUMMARY
+          echo "- DNShield-${VERSION}.pkg" >> $GITHUB_STEP_SUMMARY
+          echo "- DNShield.app.zip" >> $GITHUB_STEP_SUMMARY
+          echo "- manifest-editor.zip" >> $GITHUB_STEP_SUMMARY
+
+  cleanup:
+    name: Cleanup
+    runs-on: macos-latest
+    needs: build_with_signing
+    if: always()
+    permissions: {} # No permissions needed for cleanup
+
+    steps:
+      - name: Clean up keychain
+        if: always()
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db || true

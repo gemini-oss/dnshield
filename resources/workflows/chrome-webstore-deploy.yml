@@ -1,0 +1,49 @@
+name: Deploy Chrome Extension to Web Store
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'chrome_extension/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8  # v4.0.2
+        with:
+          node-version: '20'
+      
+      - name: Build Chrome Extension
+        run: |
+          make chrome-extension
+   
+      - name: Get extension version
+        id: get-version
+        run: |
+          # Get base version from VERSION file
+          BASE_VERSION=$(cat VERSION)
+          # Calculate Chrome extension version (major version + 1)
+          IFS='.' read -ra VERSION_PARTS <<< "$BASE_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          CHROME_MAJOR=$((MAJOR + 1))
+          CHROME_VERSION="${CHROME_MAJOR}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
+          echo "Chrome extension version: $CHROME_VERSION"
+          echo "version=$CHROME_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Upload to Chrome Web Store
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        run: |
+          chmod +x ./resources/scripts/chrome/chrome-web-store-upload.sh
+          ./resources/scripts/chrome/chrome-web-store-upload.sh build/dnshield-chrome-extension-${{ steps.get-version.outputs.version }}.zip ${{ steps.get-version.outputs.version }}

@@ -1,0 +1,77 @@
+name: Validate Manifests
+
+# Security: All actions are pinned to specific commit SHAs to prevent supply chain attacks
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'manifests/**/*.json'
+      - 'manifests/**/*.yaml'
+      - 'manifests/**/*.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  validate_manifests:
+    name: Validate Manifest Files
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+    - name: Setup Python
+      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+      with:
+        python-version: '3.11'
+
+    - name: Run manifest validation
+      run: |
+        echo "Validating manifest files..."
+        python3 resources/scripts/lint-manifests.py manifests --check-only
+
+    - name: Check for deprecated format patterns
+      run: |
+        echo "Checking for deprecated manifest format patterns..."
+        
+        # Check for old format patterns that should be converted
+        FOUND_ISSUES=false
+        
+        # Check for "name" field instead of "identifier" 
+        if grep -r '"name"' manifests/ --include="*.json" --include="*.yaml" --include="*.yml" 2>/dev/null | grep -v '"display_name"'; then
+          echo "Found deprecated 'name' field - should be 'identifier'"
+          FOUND_ISSUES=true
+        fi
+        
+        # Check for old "rules" array format (but not managed_rules)
+        if grep -r '"rules"\s*:\s*\[' manifests/ --include="*.json" 2>/dev/null | grep -v '"managed_rules"'; then
+          echo "Found deprecated 'rules' array format - should be 'managed_rules' object"
+          FOUND_ISSUES=true
+        fi
+        
+        # Check for missing manifest_version
+        find manifests/ -name "*.json" -o -name "*.yaml" -o -name "*.yml" | while read file; do
+          if ! grep -q '"manifest_version"' "$file" 2>/dev/null; then
+            echo "Missing 'manifest_version' in $file"
+            FOUND_ISSUES=true
+          fi
+        done
+        
+        if [ "$FOUND_ISSUES" = true ]; then
+          echo ""
+          echo "To fix deprecated formats:"
+          echo "   - Change 'name' 'identifier'"
+          echo "   - Change 'rules' array 'managed_rules' object"
+          echo "   - Add 'manifest_version': '1.0'"
+          echo "   - See converted files for examples"
+          exit 1
+        fi
+        
+        echo "No deprecated format patterns found"
+
+    - name: Summary
+      if: success()
+      run: |
+        echo "Manifest validation completed successfully!"
+        echo "All manifest files conform to the expected schema and format."

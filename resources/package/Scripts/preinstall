@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# DNShield preinstall script
+
+# Exit on error
+set -e
+
+echo "DNShield preinstall: Starting..."
+
+# Check if old app exists with old bundle ID
+if [ -d "/Applications/DNShield.app" ]; then
+    echo "  - Removing existing DNShield app to ensure clean installation..."
+    rm -rf "/Applications/DNShield.app"
+fi
+
+# Double-check: Remove any remaining DNShield apps or directories
+find /Applications -maxdepth 1 -name "DNShield*" -exec rm -rf {} \; 2>/dev/null || true
+
+# Stop DNShield app (after bundle ID check)
+echo "Stopping existing DNShield menu bar app..."
+/usr/bin/killall DNShield 2>/dev/null || true
+sleep 1
+
+# Stop and unload the daemon
+echo "Stopping existing DNShield daemon..."
+/bin/launchctl stop com.dnshield.daemon 2>/dev/null || true
+/bin/launchctl unload -w /Library/LaunchDaemons/com.dnshield.daemon.plist 2>/dev/null || true
+# Give it a moment to fully stop
+sleep 1
+
+# Stop and unload the watchdog (optional component)
+echo "Stopping existing DNShield watchdog..."
+/bin/launchctl stop com.dnshield.watchdog 2>/dev/null || true
+/bin/launchctl unload -w /Library/LaunchDaemons/com.dnshield.watchdog.plist 2>/dev/null || true
+sleep 1
+
+# Kill any orphaned daemon processes
+if pgrep -x "dnshield-daemon" >/dev/null 2>&1; then
+    echo "Terminating orphaned daemon processes..."
+    pkill -x "dnshield-daemon" 2>/dev/null || true
+    sleep 1
+fi
+
+if pgrep -x "dnshield-watchdog" >/dev/null 2>&1; then
+    echo "Terminating orphaned watchdog processes..."
+    pkill -x "dnshield-watchdog" 2>/dev/null || true
+    sleep 1
+fi
+
+# Remove the lock file if it exists
+if [ -f /var/run/dnshield.pid ]; then
+    echo "Removing stale lock file..."
+    rm -f /var/run/dnshield.pid
+fi
+
+echo "DNShield preinstall: Complete"
+
+exit 0

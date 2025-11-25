@@ -1,0 +1,22 @@
+{
+  "identity": "gemini",
+  "display_name": "DNShield",
+  "bundle_prefix": "com.gemini",
+  "domain_name": "dnshield",
+  "app_bundle_id": "com.gemini.dnshield.app",
+  "extension_bundle_id": "com.gemini.dnshield.extension",
+  "extension_product_name": "com.gemini.dnshield.extension",
+  "extension_system_extension_id": "com.gemini.dnshield.extension.systemextension",
+  "extension_xpc_identifier": "com.gemini.dnshield.extension.xpc",
+  "daemon_bundle_id": "com.dnshield.daemon",
+  "preference_domain": "com.gemini.dnshield.app",
+  "app_group": "group.com.gemini.dnshield",
+  "mach_service_name": "com.dnshield.daemon.xpc",
+  "team_id": "P4LZFPM2NH",
+  "developer_id_application": "Developer ID Application: Gemini Trust Company, LLC (P4LZFPM2NH)",
+  "developer_id_installer": "Developer ID Installer: Gemini Trust Company, LLC (P4LZFPM2NH)",
+  "provisioning_profiles": {
+    "app": "DNShield - Application Profile",
+    "extension": "DNShield - Extension Profile"
+  }
+}

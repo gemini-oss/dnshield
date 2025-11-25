@@ -1,0 +1,22 @@
+{
+  "display_name": "Global Allowlist",
+  "identifier": "allowlist",
+  "included_manifests": [
+  ],
+  "managed_rules": {
+    "allow": [
+      "*.gemini.com"
+    ]
+  },
+  "manifest_version": "1.0",
+  "metadata": {
+    "author": "",
+    "description": "",
+    "last_modified": "2025-09-12T10:19:26-04:00",
+    "rule_count": {
+      "allow": 1,
+      "block": 0
+    },
+    "source": ""
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "manifest_version": "1.0",
+  "identifier": "blocklist",
+  "display_name": "Global Blocklist",
+  "included_manifests": [
+  ],
+  "managed_rules": {
+    "block": [
+      "*.foo.com",
+      "*.bar.org"
+    ]
+  },
+  "metadata": {
+    "author": "",
+    "description": "",
+    "last_modified": "2025-08-03T00:00:00.000000Z",
+    "source": "",
+    "rule_count": {
+      "allow": 0,
+      "block": 12
+    }
+  }
+}

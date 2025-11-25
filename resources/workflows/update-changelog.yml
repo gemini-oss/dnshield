@@ -1,0 +1,248 @@
+name: Update Changelog
+
+# This workflow updates the CHANGELOG.md file when a new release is created
+# It moves unreleased content to a versioned section and creates a PR
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  # Trigger when a release is published
+  release:
+    types: [published]
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 1.0.0)"
+        required: true
+        type: string
+      skip_pr:
+        description: "Skip creating PR (commit directly)"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  update_changelog:
+    name: Update CHANGELOG.md
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0 # Fetch full history for changelog generation
+
+      - name: Set version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ "$EVENT_NAME" = "release" ]; then
+            # Extract version from release tag
+            VERSION="$RELEASE_TAG"
+            VERSION="${VERSION#v}"  # Remove 'v' prefix if present
+          else
+            # Use manual input
+            VERSION="$INPUT_VERSION"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Using version: $VERSION"
+
+      - name: Generate access token
+        id: access_token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        with:
+          app-id: ${{ vars.DNSHIELD_NOTARY_APP_ID }}
+          private-key: ${{ secrets.DNSHIELD_NOTARY_APP_PRIVATE_KEY_PEM_DATA }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Install ghommit
+        uses: gemini-oss/ghommit@5542c4c7e711dd9aaf940611a912251b007cc9de # main
+        with:
+          access_token: ${{ steps.access_token.outputs.token }}
+
+      - name: Update CHANGELOG.md
+        id: update_changelog
+        env:
+          GHOMMIT_GITHUB_APP_ID: ${{ vars.DNSHIELD_NOTARY_APP_ID }}
+          GHOMMIT_GITHUB_APP_INSTALLATION_ID: ${{ vars.DNSHIELD_NOTARY_APP_INSTALLATION_ID }}
+          GHOMMIT_GITHUB_APP_PRIVATE_KEY_PEM_DATA: ${{ secrets.DNSHIELD_NOTARY_APP_PRIVATE_KEY_PEM_DATA }}
+        run: |
+          set -euo pipefail
+
+          # Get current date in YYYY-MM-DD format
+          RELEASE_DATE=$(date +%Y-%m-%d)
+          VERSION="${{ env.VERSION }}"
+          echo "updated=false" >> "$GITHUB_OUTPUT"
+
+          # Check if this version already exists in CHANGELOG
+          if grep -q "## \[$VERSION\]" CHANGELOG.md; then
+            echo "Version $VERSION already exists in CHANGELOG.md, skipping update"
+            exit 0
+          fi
+
+          # Check if there's an Unreleased section
+          HAS_UNRELEASED=$(grep -c "^## \[Unreleased\]" CHANGELOG.md || true)
+
+          # Extract unreleased content if it exists
+          if [ "$HAS_UNRELEASED" -gt 0 ]; then
+            UNRELEASED_CONTENT=$(awk '/^## \[Unreleased\]/{flag=1;next}/^## \[/{flag=0}flag' CHANGELOG.md)
+            CLEAR_UNRELEASED=true
+          else
+            UNRELEASED_CONTENT=""
+            CLEAR_UNRELEASED=false
+          fi
+
+          # If no unreleased content, generate from recent commits
+          if [ -z "$UNRELEASED_CONTENT" ] || [ "$(echo "$UNRELEASED_CONTENT" | tr -d '[:space:]')" = "" ]; then
+            echo "No unreleased content found, generating from recent commits"
+
+            # Get the latest version tag
+            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+            if [ -n "$LAST_TAG" ]; then
+              # Generate changelog entry from commits since last tag with linked commit hashes
+              # Format: - message ([short_hash](full_url))
+              REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+              COMMIT_LOG=$(git log --pretty=format:"- %s ([%h]($REPO_URL/commit/%H))" $LAST_TAG..HEAD --no-merges | head -20)
+
+              if [ -n "$COMMIT_LOG" ]; then
+                UNRELEASED_CONTENT=$(printf "### Changed\\n\\n%s" "$COMMIT_LOG")
+              fi
+            fi
+          fi
+
+          if [ -n "$UNRELEASED_CONTENT" ]; then
+            # Create the new changelog with proper structure
+            if [ "$CLEAR_UNRELEASED" = "true" ]; then
+              # There's an Unreleased section to clear
+              {
+                # Keep everything before the Unreleased section
+                awk '/^## \[Unreleased\]/{exit}1' CHANGELOG.md
+
+                # Add empty Unreleased section
+                echo "## [Unreleased]"
+                echo ""
+
+                # Add new version section
+                echo "## [$VERSION] - $RELEASE_DATE"
+                echo ""
+                echo "$UNRELEASED_CONTENT"
+                echo ""
+
+                # Add everything after the Unreleased section (other versions)
+                awk '/^## \[Unreleased\]/{flag=1;next}flag && /^## \[/{flag=2}flag==2' CHANGELOG.md
+              } > CHANGELOG.tmp.md
+            else
+              # No Unreleased section, just insert the new version at the right place
+              # Find the first version section
+              FIRST_VERSION_LINE=$(grep -n "^## \[" CHANGELOG.md | grep -v "Unreleased" | head -1 | cut -d: -f1)
+
+              if [ -n "$FIRST_VERSION_LINE" ]; then
+                # Insert new version before the first existing version
+                {
+                  head -n $((FIRST_VERSION_LINE - 1)) CHANGELOG.md
+                  echo ""
+                  echo "## [$VERSION] - $RELEASE_DATE"
+                  echo ""
+                  echo "$UNRELEASED_CONTENT"
+                  echo ""
+                  tail -n +$FIRST_VERSION_LINE CHANGELOG.md
+                } > CHANGELOG.tmp.md
+              else
+                # No existing versions, append at the end
+                {
+                  cat CHANGELOG.md
+                  echo ""
+                  echo "## [$VERSION] - $RELEASE_DATE"
+                  echo ""
+                  echo "$UNRELEASED_CONTENT"
+                } > CHANGELOG.tmp.md
+              fi
+            fi
+
+            mv CHANGELOG.tmp.md CHANGELOG.md
+            echo "CHANGELOG.md updated for version $VERSION"
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No unreleased content to move to version $VERSION"
+          fi
+
+      - name: Commit directly
+        if: |
+          steps.update_changelog.outputs.updated == 'true' &&
+          github.event.inputs.skip_pr == 'true'
+        env:
+          GHOMMIT_GITHUB_APP_ID: ${{ vars.DNSHIELD_NOTARY_APP_ID }}
+          GHOMMIT_GITHUB_APP_INSTALLATION_ID: ${{ vars.DNSHIELD_NOTARY_APP_INSTALLATION_ID }}
+          GHOMMIT_GITHUB_APP_PRIVATE_KEY_PEM_DATA: ${{ secrets.DNSHIELD_NOTARY_APP_PRIVATE_KEY_PEM_DATA }}
+        run: |
+          git add CHANGELOG.md
+          ghommit -m "Update CHANGELOG.md for version ${{ env.VERSION }} [skip ci]"
+          git push
+
+      - name: Create PR for changelog update
+        if: |
+          steps.update_changelog.outputs.updated == 'true' &&
+          github.event.inputs.skip_pr != 'true'
+        env:
+          VERSION: ${{ env.VERSION }}
+          GH_TOKEN: ${{ steps.access_token.outputs.token }}
+          GHOMMIT_GITHUB_APP_ID: ${{ vars.DNSHIELD_NOTARY_APP_ID }}
+          GHOMMIT_GITHUB_APP_INSTALLATION_ID: ${{ vars.DNSHIELD_NOTARY_APP_INSTALLATION_ID }}
+          GHOMMIT_GITHUB_APP_PRIVATE_KEY_PEM_DATA: ${{ secrets.DNSHIELD_NOTARY_APP_PRIVATE_KEY_PEM_DATA }}
+        run: |
+          set -euo pipefail
+
+          SAFE_VERSION=${VERSION//./-}
+          RAW_BRANCH="release/changelog-${SAFE_VERSION}-$(date +%Y%m%d-%H%M%S)-$(openssl rand -hex 2)"
+          BRANCH_NAME=$(echo "$RAW_BRANCH" | tr '[:upper:]' '[:lower:]')
+
+          git checkout -b "$BRANCH_NAME"
+          git add CHANGELOG.md
+          ghommit -m "Update CHANGELOG.md for version ${VERSION} [skip ci]"
+
+          PR_TITLE="Update CHANGELOG.md for version ${VERSION}"
+
+          # Create PR body with proper formatting
+          printf '%s\n' \
+            "Automated changelog update" \
+            "" \
+            "* Version: ${VERSION}" \
+            "* Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            "" \
+            "This PR moves the Unreleased notes into a stamped section for ${VERSION}." \
+            > pr_body.txt
+
+          gh pr create \
+            --title "${PR_TITLE}" \
+            --body-file pr_body.txt \
+            --base main \
+            --head "${BRANCH_NAME}" \
+            --label "automation" \
+            --label "release"
+
+      - name: Summary
+        if: always()
+        env:
+          UPDATED: ${{ steps.update_changelog.outputs.updated }}
+          SKIP_PR: ${{ github.event.inputs.skip_pr }}
+        run: |
+          echo "## Changelog Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$UPDATED" = "true" ]; then
+            echo "CHANGELOG.md updated for version ${VERSION}" >> $GITHUB_STEP_SUMMARY
+            if [ "$SKIP_PR" = "true" ]; then
+              echo "- Changes committed directly to main branch" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- Pull request created for review" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "ℹ️ No changelog update needed" >> $GITHUB_STEP_SUMMARY
+            echo "- Version ${VERSION} already exists or no unreleased content" >> $GITHUB_STEP_SUMMARY
+          fi
