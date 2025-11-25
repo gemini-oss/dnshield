@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>GH_CLIENT_ID</key>
+		<string></string>
+		<key>GH_APP_ID</key>
+		<string>1932006</string>
+		<key>GH_INSTALLATION_ID</key>
+		<string></string>
+		<key>GH_APP_PRIVATE_KEY</key>
+		<string></string>
+		<key>GITHUB_API_BASE</key>
+		<string>https://api.github.com</string>
+		<key>GITHUB_DEFAULT_OWNER</key>
+		<string></string>
+		<key>GITHUB_DEFAULT_REPO</key>
+		<string>dnshield</string>
+	</dict>
+</plist>

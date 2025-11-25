@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>version</key>
+    <string>1.0</string>
+    <key>name</key>
+    <string>Example DNS Rules</string>
+    <key>author</key>
+    <string>DNShield Team</string>
+    <key>description</key>
+    <string>Example plist-formatted DNS rules for testing</string>
+    <key>updated</key>
+    <date>2024-01-01T00:00:00Z</date>
+    <key>blocked</key>
+    <array>
+        <string>ad.example.com</string>
+        <string>spam.test.com</string>
+        <string>*.tracking.com</string>
+        <string>malware.example.org</string>
+        <dict>
+            <key>domain</key>
+            <string>high-priority-block.com</string>
+            <key>priority</key>
+            <integer>100</integer>
+            <key>comment</key>
+            <string>High priority malicious domain</string>
+        </dict>
+    </array>
+    <key>whitelist</key>
+    <array>
+        <string>safe.example.com</string>
+        <string>trusted.domain.org</string>
+        <dict>
+            <key>domain</key>
+            <string>important.business.com</string>
+            <key>priority</key>
+            <integer>90</integer>
+            <key>comment</key>
+            <string>Critical business domain</string>
+        </dict>
+    </array>
+    <key>metadata</key>
+    <dict>
+        <key>category</key>
+        <string>security</string>
+        <key>environment</key>
+        <string>test</string>
+        <key>rule_count</key>
+        <integer>8</integer>
+    </dict>
+</dict>
+</plist>

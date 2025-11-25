@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "authToken": {
+      "title": "Authentication Token",
+      "description": "Bearer token for WebSocket authentication with DNShield",
+      "type": "string"
+    },
+    "websocketUrl": {
+      "title": "WebSocket URL",
+      "description": "URL of the DNShield WebSocket server",
+      "type": "string",
+      "default": "ws://localhost:8876/ws"
+    },
+    "debug": {
+      "title": "Debug Mode",
+      "description": "Enable debug logging",
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dnshield.daemon</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/dnshield-daemon</string>
+    </array>
+    <key>MachServices</key>
+    <dict>
+        <key>com.dnshield.daemon.xpc</key>
+        <true/>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+        <key>Crashed</key>
+        <true/>
+    </dict>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+    <key>WorkingDirectory</key>
+    <string>/Library/Application Support/DNShield</string>
+    <key>ProcessType</key>
+    <string>Interactive</string>
+    <key>Nice</key>
+    <integer>-10</integer>
+    <key>UserName</key>
+    <string>root</string>
+    <key>GroupName</key>
+    <string>wheel</string>
+    <key>AssociatedBundleIdentifiers</key>
+    <array>
+        <string>com.dnshield.app</string>
+        <string>com.dnshield.extension</string>
+    </array>
+</dict>
+</plist>

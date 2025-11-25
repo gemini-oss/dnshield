@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>name</key>
+    <string>Simple Test Rules</string>
+    <key>version</key>
+    <string>1.0</string>
+    <key>blocked</key>
+    <array>
+        <string>test.example.com</string>
+        <string>spam.test.com</string>
+    </array>
+    <key>whitelist</key>
+    <array>
+        <string>safe.example.com</string>
+    </array>
+</dict>
+</plist>

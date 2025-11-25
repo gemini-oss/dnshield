@@ -1,0 +1,799 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9D12573A2E3A599400609A83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D1257392E3A599400609A83 /* Assets.xcassets */; };
+		9D12573B2E3A599400609A83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D1257392E3A599400609A83 /* Assets.xcassets */; };
+		9D7B02B22EAFF6A400774A8D /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D7B02B02EAFF68F00774A8D /* OCMock.framework */; };
+		9D7B02B32EAFF6A400774A8D /* OCMock.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9D7B02B02EAFF68F00774A8D /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9D7C67682E33FABB00DAE03D /* com.dnshield.extension.systemextension in Embed System Extensions */ = {isa = PBXBuildFile; fileRef = 9D7C675A2E33FABB00DAE03D /* com.dnshield.extension.systemextension */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9D7C67702E34002600DAE03D /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D7C676F2E34002600DAE03D /* NetworkExtension.framework */; };
+		9D87586E2E81D51C0046AF31 /* entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D87586B2E81D51C0046AF31 /* entitlements.plist */; };
+		9D8758712E81D51C0046AF31 /* entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D87586B2E81D51C0046AF31 /* entitlements.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9D5B614B2E85B5B9001A4B2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D7C672E2E33F9A700DAE03D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D7C67352E33F9A700DAE03D;
+			remoteInfo = DNShield;
+		};
+		9D7C67662E33FABB00DAE03D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D7C672E2E33F9A700DAE03D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D7C67592E33FABB00DAE03D;
+			remoteInfo = Extension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9D7C676D2E33FABB00DAE03D /* Embed System Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(SYSTEM_EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+				9D7C67682E33FABB00DAE03D /* com.dnshield.extension.systemextension in Embed System Extensions */,
+			);
+			name = "Embed System Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AADDDEEE1122334455667788 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9D7B02B32EAFF6A400774A8D /* OCMock.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9D1257392E3A599400609A83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9D5B61472E85B5B9001A4B2A /* DNShieldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DNShieldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D7B02B02EAFF68F00774A8D /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OCMock.framework; sourceTree = "<group>"; };
+		9D7C67362E33F9A700DAE03D /* DNShield.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DNShield.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D7C675A2E33FABB00DAE03D /* com.dnshield.extension.systemextension */ = {isa = PBXFileReference; explicitFileType = "wrapper.system-extension"; includeInIndex = 0; path = com.dnshield.extension.systemextension; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D7C676F2E34002600DAE03D /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		9D87586B2E81D51C0046AF31 /* entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = entitlements.plist; sourceTree = "<group>"; };
+		9D87586C2E81D51C0046AF31 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9D7C67692E33FABB00DAE03D /* Exceptions for "Extension" folder in "Extension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9D7C67592E33FABB00DAE03D /* Extension */;
+		};
+		AABBCCDD0011223344556677 /* Exceptions for "Extension" folder in "DNShieldTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				main.m,
+			);
+			target = 9D5B61462E85B5B9001A4B2A /* DNShieldTests */;
+		};
+		AABBCCDD0011223344556688 /* Exceptions for "DNShieldTests" folder in "DNShieldTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9D5B61462E85B5B9001A4B2A /* DNShieldTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		9D5B61482E85B5B9001A4B2A /* DNShieldTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AABBCCDD0011223344556688 /* Exceptions for "DNShieldTests" folder in "DNShieldTests" target */,
+			);
+			path = DNShieldTests;
+			sourceTree = "<group>";
+		};
+		9D7C67382E33F9A700DAE03D /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = App;
+			sourceTree = "<group>";
+		};
+		9D7C675E2E33FABB00DAE03D /* Extension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9D7C67692E33FABB00DAE03D /* Exceptions for "Extension" folder in "Extension" target */,
+				AABBCCDD0011223344556677 /* Exceptions for "Extension" folder in "DNShieldTests" target */,
+			);
+			path = Extension;
+			sourceTree = SOURCE_ROOT;
+		};
+		9D8758202E7DB81A0046AF31 /* Common */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Common;
+			sourceTree = SOURCE_ROOT;
+		};
+		9D88D9812ED5F967002BBE68 /* CTL */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CTL;
+			sourceTree = "<group>";
+		};
+		9D88DC942ED63B37002BBE68 /* XPC */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = XPC;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9D5B61442E85B5B9001A4B2A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D7B02B22EAFF6A400774A8D /* OCMock.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D7C67332E33F9A700DAE03D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D7C67572E33FABB00DAE03D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D7C67702E34002600DAE03D /* NetworkExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9D7B02B12EAFF68F00774A8D /* macos-arm64_x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+				9D7B02B02EAFF68F00774A8D /* OCMock.framework */,
+			);
+			name = "macos-arm64_x86_64";
+			path = "DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64";
+			sourceTree = "<group>";
+		};
+		9D7C672D2E33F9A700DAE03D = {
+			isa = PBXGroup;
+			children = (
+				9D88DC942ED63B37002BBE68 /* XPC */,
+				9D88D9812ED5F967002BBE68 /* CTL */,
+				9D87586D2E81D51C0046AF31 /* Daemon */,
+				9D1257392E3A599400609A83 /* Assets.xcassets */,
+				9D7C67382E33F9A700DAE03D /* App */,
+				9D7C675E2E33FABB00DAE03D /* Extension */,
+				9D8758202E7DB81A0046AF31 /* Common */,
+				9D5B61482E85B5B9001A4B2A /* DNShieldTests */,
+				9D7C676E2E34002600DAE03D /* Frameworks */,
+				9D7C67372E33F9A700DAE03D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9D7C67372E33F9A700DAE03D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D7C67362E33F9A700DAE03D /* DNShield.app */,
+				9D7C675A2E33FABB00DAE03D /* com.dnshield.extension.systemextension */,
+				9D5B61472E85B5B9001A4B2A /* DNShieldTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9D7C676E2E34002600DAE03D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9D7B02B12EAFF68F00774A8D /* macos-arm64_x86_64 */,
+				9D7C676F2E34002600DAE03D /* NetworkExtension.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9D87586D2E81D51C0046AF31 /* Daemon */ = {
+			isa = PBXGroup;
+			children = (
+				9D87586B2E81D51C0046AF31 /* entitlements.plist */,
+				9D87586C2E81D51C0046AF31 /* main.m */,
+			);
+			path = Daemon;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9D5B61462E85B5B9001A4B2A /* DNShieldTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D5B614F2E85B5BA001A4B2A /* Build configuration list for PBXNativeTarget "DNShieldTests" */;
+			buildPhases = (
+				9D5B61432E85B5B9001A4B2A /* Sources */,
+				9D5B61442E85B5B9001A4B2A /* Frameworks */,
+				9D5B61452E85B5B9001A4B2A /* Resources */,
+				AADDDEEE1122334455667788 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9D5B614C2E85B5B9001A4B2A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9D5B61482E85B5B9001A4B2A /* DNShieldTests */,
+				9D7C675E2E33FABB00DAE03D /* Extension */,
+				9D8758202E7DB81A0046AF31 /* Common */,
+			);
+			name = DNShieldTests;
+			packageProductDependencies = (
+			);
+			productName = DNShieldTests;
+			productReference = 9D5B61472E85B5B9001A4B2A /* DNShieldTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		9D7C67352E33F9A700DAE03D /* DNShield */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D7C67462E33F9A900DAE03D /* Build configuration list for PBXNativeTarget "DNShield" */;
+			buildPhases = (
+				9D7C67322E33F9A700DAE03D /* Sources */,
+				9D7C67332E33F9A700DAE03D /* Frameworks */,
+				9D7C67342E33F9A700DAE03D /* Resources */,
+				9D7C676D2E33FABB00DAE03D /* Embed System Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9D7C67672E33FABB00DAE03D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9D7C67382E33F9A700DAE03D /* App */,
+				9D8758202E7DB81A0046AF31 /* Common */,
+			);
+			name = DNShield;
+			packageProductDependencies = (
+			);
+			productName = DNShield;
+			productReference = 9D7C67362E33F9A700DAE03D /* DNShield.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9D7C67592E33FABB00DAE03D /* Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D7C676A2E33FABB00DAE03D /* Build configuration list for PBXNativeTarget "Extension" */;
+			buildPhases = (
+				9D7C67562E33FABB00DAE03D /* Sources */,
+				9D7C67572E33FABB00DAE03D /* Frameworks */,
+				9D7C67582E33FABB00DAE03D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				9D7C675E2E33FABB00DAE03D /* Extension */,
+				9D8758202E7DB81A0046AF31 /* Common */,
+			);
+			name = Extension;
+			packageProductDependencies = (
+			);
+			productName = Extension;
+			productReference = 9D7C675A2E33FABB00DAE03D /* com.dnshield.extension.systemextension */;
+			productType = "com.apple.product-type.system-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9D7C672E2E33F9A700DAE03D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					9D5B61462E85B5B9001A4B2A = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 9D7C67352E33F9A700DAE03D;
+					};
+					9D7C67352E33F9A700DAE03D = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					9D7C67592E33FABB00DAE03D = {
+						CreatedOnToolsVersion = 16.4;
+						LastSwiftMigration = 1640;
+					};
+				};
+			};
+			buildConfigurationList = 9D7C67312E33F9A700DAE03D /* Build configuration list for PBXProject "DNShield" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9D7C672D2E33F9A700DAE03D;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9D7C67372E33F9A700DAE03D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9D7C67352E33F9A700DAE03D /* DNShield */,
+				9D7C67592E33FABB00DAE03D /* Extension */,
+				9D5B61462E85B5B9001A4B2A /* DNShieldTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9D5B61452E85B5B9001A4B2A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D7C67342E33F9A700DAE03D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D8758712E81D51C0046AF31 /* entitlements.plist in Resources */,
+				9D12573A2E3A599400609A83 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D7C67582E33FABB00DAE03D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D87586E2E81D51C0046AF31 /* entitlements.plist in Resources */,
+				9D12573B2E3A599400609A83 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9D5B61432E85B5B9001A4B2A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D7C67322E33F9A700DAE03D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D7C67562E33FABB00DAE03D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9D5B614C2E85B5B9001A4B2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D7C67352E33F9A700DAE03D /* DNShield */;
+			targetProxy = 9D5B614B2E85B5B9001A4B2A /* PBXContainerItemProxy */;
+		};
+		9D7C67672E33FABB00DAE03D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D7C67592E33FABB00DAE03D /* Extension */;
+			targetProxy = 9D7C67662E33FABB00DAE03D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9D5B614D2E85B5BA001A4B2A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/DNShieldTests/Frameworks",
+					"$(SRCROOT)/DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64",
+					"$(PROJECT_DIR)/DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64",
+					"$(PROJECT_DIR)/DNShieldTests/Frameworks",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(SRCROOT)/Extension",
+					"$(SRCROOT)/Extension/**",
+					"$(SRCROOT)/Common",
+					"$(SRCROOT)/DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64/OCMock.framework/Headers",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-framework",
+					OCMock,
+					"-framework",
+					NetworkExtension,
+					"-framework",
+					Network,
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-framework",
+					IOKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gemini.DNShieldTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DNShield.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DNShield";
+			};
+			name = Debug;
+		};
+		9D5B614E2E85B5BA001A4B2A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/DNShieldTests/Frameworks",
+					"$(SRCROOT)/DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64",
+					"$(PROJECT_DIR)/DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64",
+					"$(PROJECT_DIR)/DNShieldTests/Frameworks",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(SRCROOT)/Extension",
+					"$(SRCROOT)/Extension/**",
+					"$(SRCROOT)/Common",
+					"$(SRCROOT)/DNShieldTests/vendors/OCMock.xcframework/macos-arm64_x86_64/OCMock.framework/Headers",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-framework",
+					OCMock,
+					"-framework",
+					NetworkExtension,
+					"-framework",
+					Network,
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-framework",
+					IOKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gemini.DNShieldTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DNShield.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DNShield";
+			};
+			name = Release;
+		};
+		9D7C67442E33F9A900DAE03D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = C6F9Y6M584;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		9D7C67452E33F9A900DAE03D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = C6F9Y6M584;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
+				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/**";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		9D7C67472E33F9A900DAE03D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/DNShield.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = C6F9Y6M584;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "DNShield uses this system extension to filter DNS requests and protect your privacy.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dnshield.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "DNShield Application - Provisioning Profile";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		9D7C67482E33F9A900DAE03D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/DNShield.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = C6F9Y6M584;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "DNShield uses this system extension to filter DNS requests and protect your privacy.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dnshield.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "DNShield Application - Provisioning Profile";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		9D7C676B2E33FABB00DAE03D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Extension/Extension.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = C6F9Y6M584;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Extension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Extension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "DNShield uses this system extension to filter DNS requests and block malicious domains.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dnshield.extension;
+				PRODUCT_NAME = com.dnshield.extension;
+				PROVISIONING_PROFILE_SPECIFIER = "DNShile Extension Profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "DNShield Extension Provisioning Profile";
+				REGISTER_APP_GROUPS = YES;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		9D7C676C2E33FABB00DAE03D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Extension/Extension.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application: John Peterson (C6F9Y6M584)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = C6F9Y6M584;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				"HEADER_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/**";
+				INFOPLIST_FILE = Extension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Extension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSystemExtensionUsageDescription = "DNShield uses this system extension to filter DNS requests and block malicious domains.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dnshield.extension;
+				PRODUCT_NAME = com.dnshield.extension;
+				PROVISIONING_PROFILE_SPECIFIER = "DNShile Extension Profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "DNShield Extension Provisioning Profile";
+				REGISTER_APP_GROUPS = YES;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9D5B614F2E85B5BA001A4B2A /* Build configuration list for PBXNativeTarget "DNShieldTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D5B614D2E85B5BA001A4B2A /* Debug */,
+				9D5B614E2E85B5BA001A4B2A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D7C67312E33F9A700DAE03D /* Build configuration list for PBXProject "DNShield" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D7C67442E33F9A900DAE03D /* Debug */,
+				9D7C67452E33F9A900DAE03D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D7C67462E33F9A900DAE03D /* Build configuration list for PBXNativeTarget "DNShield" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D7C67472E33F9A900DAE03D /* Debug */,
+				9D7C67482E33F9A900DAE03D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D7C676A2E33FABB00DAE03D /* Build configuration list for PBXNativeTarget "Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D7C676B2E33FABB00DAE03D /* Debug */,
+				9D7C676C2E33FABB00DAE03D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9D7C672E2E33F9A700DAE03D /* Project object */;
+}

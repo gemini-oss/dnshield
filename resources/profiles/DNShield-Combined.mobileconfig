@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadUUID</key>
+	<string>DAF94EB9-415C-4A5C-815E-941846C592E0</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadOrganization</key>
+	<string></string>
+	<key>PayloadIdentifier</key>
+	<string>com.dnshield.combined-profile</string>
+	<key>PayloadDisplayName</key>
+	<string>DNShield Complete Configuration</string>
+	<key>PayloadDescription</key>
+	<string>Complete DNShield configuration including DNS Proxy, TCC permissions, system extensions, and app settings</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadContent</key>
+	<array>
+		<!-- DNS Proxy Configuration -->
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Configures DNS Proxy settings for DNShield</string>
+			<key>PayloadDisplayName</key>
+			<string>DNShield DNS Proxy</string>
+			<key>PayloadIdentifier</key>
+			<string>com.dnshield.dns-proxy.config</string>
+			<key>PayloadType</key>
+			<string>com.apple.dnsProxy.managed</string>
+			<key>PayloadUUID</key>
+			<string>B4E5C8D2-3F6A-4B8C-9D1E-2A7F9C5B4E3D</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>AppBundleIdentifier</key>
+			<string>com.dnshield.app</string>
+			<key>ProviderBundleIdentifier</key>
+			<string>com.dnshield.extension</string>
+			<key>ProviderDesignatedRequirement</key>
+			<string>anchor apple generic and identifier "com.dnshield.extension" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = C6F9Y6M584)</string>
+			<key>ProviderConfiguration</key>
+			<dict>
+				<key>EnableWebSocketServer</key>
+				<true/>
+				<key>WebSocketPort</key>
+				<integer></integer>
+				<key>WebSocketAuthToken</key>
+				<string></string>
+				<key>ManifestURL</key>
+				<string>https://dnshield.net/manifests</string>
+				<key>ManifestUpdateInterval</key>
+				<integer>300</integer>
+				<key>EnableDNSChainPreservation</key>
+				<true/>
+				<key>TelemetryEnabled</key>
+				<true/>
+				<key>TelemetryHECToken</key>
+				<string></string>
+				<key>TelemetryServerURL</key>
+				<string></string>
+				<key>AdditionalHttpHeaders</key>
+				<array>
+					<string>Authorization: Basic abc123=</string>
+				</array>
+				<key>VPNResolvers</key>
+				<array>
+					<string></string>
+				</array>
+			</dict>
+		</dict>
+		
+		<!-- TCC Privacy Permissions -->
+		<dict>
+			<key>PayloadUUID</key>
+			<string>A919B9E8-A42F-4441-A9FA-90C3CEBFC6C9</string>
+			<key>PayloadType</key>
+			<string>com.apple.TCC.configuration-profile-policy</string>
+			<key>PayloadOrganization</key>
+			<string></string>
+			<key>PayloadIdentifier</key>
+			<string>A919B9E8-A42F-4441-A9FA-90C3CEBFC6C9</string>
+			<key>PayloadDisplayName</key>
+			<string>DNShield Privacy Permissions</string>
+			<key>PayloadDescription</key>
+			<string>Grants necessary privacy permissions for DNShield components</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>Services</key>
+			<dict>
+				<key>SystemPolicyAllFiles</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>com.dnshield.app</string>
+						<key>CodeRequirement</key>
+						<string>identifier "com.dnshield.app" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = C6F9Y6M584</string>
+						<key>IdentifierType</key>
+						<string>bundleID</string>
+						<key>StaticCode</key>
+						<false/>
+						<key>Allowed</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>/usr/local/bin/dnshield-ctl</string>
+						<key>CodeRequirement</key>
+						<string>identifier "dnshield-ctl" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = C6F9Y6M584</string>
+						<key>IdentifierType</key>
+						<string>path</string>
+						<key>StaticCode</key>
+						<false/>
+						<key>Allowed</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>/usr/local/bin/dnshield-daemon</string>
+						<key>CodeRequirement</key>
+						<string>identifier "dnshield-daemon" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = C6F9Y6M584</string>
+						<key>IdentifierType</key>
+						<string>path</string>
+						<key>StaticCode</key>
+						<false/>
+						<key>Allowed</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>/usr/local/bin/dnshield-xpc</string>
+						<key>CodeRequirement</key>
+						<string>identifier "dnshield-xpc" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = C6F9Y6M584</string>
+						<key>IdentifierType</key>
+						<string>path</string>
+						<key>StaticCode</key>
+						<false/>
+						<key>Allowed</key>
+						<true/>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		
+		<!-- System Extensions Policy -->
+		<dict>
+			<key>PayloadUUID</key>
+			<string>2FA83182-F798-4E9E-AFC9-1A955BFA08FD</string>
+			<key>PayloadType</key>
+			<string>com.apple.system-extension-policy</string>
+			<key>PayloadOrganization</key>
+			<string></string>
+			<key>PayloadIdentifier</key>
+			<string>2FA83182-F798-4E9E-AFC9-1A955BFA08FD</string>
+			<key>PayloadDisplayName</key>
+			<string>DNShield System Extensions</string>
+			<key>PayloadDescription</key>
+			<string>Allows DNShield system extensions to run</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>AllowUserOverrides</key>
+			<true/>
+			<key>AllowedTeamIdentifiers</key>
+			<array>
+				<string>C6F9Y6M584</string>
+			</array>
+		</dict>
+		
+		<!-- Managed Login Items -->
+		<dict>
+			<key>PayloadDisplayName</key>
+			<string>DNShield Login Items</string>
+			<key>PayloadIdentifier</key>
+			<string>57DB8971-BB73-458C-A7CA-7D0602ACF070</string>
+			<key>PayloadOrganization</key>
+			<string></string>
+			<key>PayloadType</key>
+			<string>com.apple.servicemanagement</string>
+			<key>PayloadUUID</key>
+			<string>57DB8971-BB73-458C-A7CA-7D0602ACF070</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>Rules</key>
+			<array>
+				<dict>
+					<key>Comment</key>
+					<string>DNShield</string>
+					<key>RuleType</key>
+					<string>TeamIdentifier</string>
+					<key>RuleValue</key>
+					<string>C6F9Y6M584</string>
+				</dict>
+			</array>
+		</dict>
+		
+		<!-- App Preferences -->
+		<dict>
+			<key>PayloadDisplayName</key>
+			<string>DNShield App Settings</string>
+			<key>PayloadIdentifier</key>
+			<string>E86D210E-C453-4660-8574-949459F74B71</string>
+			<key>PayloadOrganization</key>
+			<string></string>
+			<key>PayloadType</key>
+			<string>com.apple.ManagedClient.preferences</string>
+			<key>PayloadUUID</key>
+			<string>E86D210E-C453-4660-8574-949459F74B71</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadContent</key>
+			<dict>
+				<key>com.dnshield.app</key>
+				<dict>
+					<key>Forced</key>
+					<array>
+						<dict>
+							<key>mcx_preference_settings</key>
+							<dict>
+								<key>EnableDNSChainPreservation</key>
+								<true/>
+								<key>EnableWebSocketServer</key>
+								<true/>
+								<key>ManagedMode</key>
+								<true/>
+								<key>ManifestURL</key>
+								<string></string>
+								<key>ManifestUpdateInterval</key>
+								<integer>300</integer>
+								<key>TelemetryEnabled</key>
+								<true/>
+								<key>TelemetryHECToken</key>
+								<string></string>
+								<key>TelemetryServerURL</key>
+								<string></string>
+								<key>UserCanAdjustCacheTTL</key>
+								<true/>
+								<key>WebSocketAuthToken</key>
+								<string></string>
+								<key>WebSocketPort</key>
+								<integer></integer>
+								<key>AdditionalHttpHeaders</key>
+								<array>
+									<string>Authorization: Basic abc123</string>
+								</array>
+								<key>VPNResolvers</key>
+								<array>
+									<string></string>
+								</array>
+							</dict>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

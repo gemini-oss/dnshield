@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "identifier": "default",
+  "display_name": "Default Rules with Included Manifests",
+  "included_manifests": [
+    "includes/global/allowlist",
+    "includes/global/blocklist"
+  ],
+  "metadata": {
+    "author": "DNShield",
+    "description": "Default configuration with included global allowlist and blocklist",
+    "last_modified": "2025-08-04T00:00:00.000000Z",
+    "version": "1.0"
+  }
+}

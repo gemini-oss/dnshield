@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "DNShield",
+  "version": "2.3.41",
+  "description": "Monitors DNS blocks for DNShield",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "storage",
+    "tabs",
+    "webNavigation",
+    "notifications",
+    "alarms"
+  ],
+  "storage": {
+    "managed_schema": "schema.json"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "48": "images/icon-48.png",
+      "128": "images/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "web_accessible_resources": [{
+    "resources": ["blocked.html", "history.html", "css/blocked.css", "css/history.css", "images/*"],
+    "matches": ["<all_urls>"]
+  }]
+}

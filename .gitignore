@@ -1,0 +1,111 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Xcode
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Test Frameworks
+dnshield/DNShieldTests/Frameworks/
+dnshield/Tests/Frameworks/
+dnshield/OCMock.xcframework/
+dnshield/DNShieldTests/vendors/OCMock.xcframework/
+
+# Build outputs
+dist/
+*.pkg
+*.dmg
+*.app
+*.zip
+
+# Go
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Project specific
+/reference/
+/streaming-ext-logs.log
+dnshield/build/
+dnshield/dist/
+/server/dnshield
+/server/dnshield-server*
+/resources/scripts/dns-chain-test.log
+code_review/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+*.pem
+manifest-editor
+!tools/cmd/manifest-editor/
+!tools/cmd/manifest-editor/tool-scope.json

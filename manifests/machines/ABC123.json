@@ -1,0 +1,19 @@
+{
+  "manifest_version": "1.0",
+  "identifier": "ABC123",
+  "display_name": "DNShield Rules for ABC123",
+  "included_manifests": [
+    "includes/global/allowlist",
+    "includes/global/blocklist"
+  ],
+  "metadata": {
+    "author": "hadrian.marlowe",
+    "description": "Configuration for device: ABC123",
+    "last_modified": "2025-08-28T13:13:01Z",
+    "rule_count": {
+      "allow": 0,
+      "block": 0
+    },
+    "version": "1.0"
+  }
+}

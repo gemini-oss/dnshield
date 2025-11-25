@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNShield Manifest Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .search-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-type {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-type button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .search-type button.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .search-btn {
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .column {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+        }
+        
+        .column h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .info-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            color: #868e96;
+            font-size: 0.9rem;
+        }
+        
+        .info-value {
+            color: #212529;
+            font-weight: 500;
+        }
+        
+        .manifest-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .manifest-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: move;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .manifest-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+        
+        .manifest-item.dragging {
+            opacity: 0.5;
+            background: #e7f5ff;
+        }
+        
+        .manifest-item.drag-over {
+            background: #d0ebff;
+            transform: scale(1.02);
+        }
+        
+        .manifest-name {
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .manifest-type {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .actions {
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #37b24d;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #2f9e44;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(55, 178, 77, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #868e96;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #6c757d;
+            transform: translateY(-2px);
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d3f9d8;
+            color: #2b8a3e;
+            border: 1px solid #b2f2bb;
+        }
+        
+        .alert-error {
+            background: #ffe3e3;
+            color: #c92a2a;
+            border: 1px solid #ffc9c9;
+        }
+        
+        .alert-info {
+            background: #d0ebff;
+            color: #1864ab;
+            border: 1px solid #a5d8ff;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #868e96;
+            padding: 40px;
+        }
+        
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+        
+        .toggle-container {
+            margin-top: 15px;
+        }
+        
+        .toggle-label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #dee2e6;
+            border-radius: 12px;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch input {
+            display: none;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            transform: translateX(26px);
+        }
+        
+        .toggle-switch input:checked ~ .toggle-bg {
+            background: #667eea;
+        }
+        
+        .toggle-bg {
+            position: absolute;
+            inset: 0;
+            background: #dee2e6;
+            border-radius: 12px;
+            transition: background 0.3s;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            color: #212529;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-control[type="textarea"] {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .path-suggestion {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f3f5;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .path-suggestion:hover {
+            background: #f8f9fa;
+        }
+        
+        .path-suggestion:last-child {
+            border-bottom: none;
+        }
+        
+        .path-suggestion.valid {
+            background: #d3f9d8;
+            border-left: 3px solid #37b24d;
+        }
+        
+        .path-suggestion.valid:hover {
+            background: #c3f7cc;
+        }
+        
+        .path-text {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #495057;
+            flex: 1;
+        }
+        
+        .path-description {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="position: relative;">
+                <h1>DNShield Manifest Editor</h1>
+                <p>Easily manage DNS filtering rules and create pull requests</p>
+                <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="goHome()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 500;" title="Home">
+                        Home
+                    </button>
+                    <button onclick="openConfigModal()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 500;" title="Settings">
+                        Settings
+                    </button>
+                    <div id="authStatus"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-section">
+            <div class="alert alert-info" id="alertBox"></div>
+            <div class="search-container">
+                <div class="search-type">
+                    <button class="active" data-type="user">User</button>
+                    <button data-type="machine">Machine</button>
+                    <button data-type="group">Group</button>
+                </div>
+                <input type="text" class="search-input" id="searchInput" placeholder="Enter username, machine serial, or group name...">
+                <button class="search-btn" onclick="performSearch()">Search</button>
+            </div>
+            <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                <button class="btn btn-primary" onclick="openDomainModal()">Manage Domains & Manifests</button>
+                <p style="color: #6c757d; margin-top: 10px; font-size: 0.9rem;">Create new manifests or add/remove domains from existing ones</p>
+            </div>
+        </div>
+        
+        <div id="loadingSection" class="loading">
+            <div class="spinner"></div>
+            <p>Loading manifest data...</p>
+        </div>
+        
+        <div id="contentSection" style="display: none;">
+            <div class="main-content">
+                <div class="column">
+                    <h2>Current Assignments</h2>
+                    <div class="info-panel" id="entityInfo">
+                        <div class="info-item">
+                            <span class="info-label">Entity:</span>
+                            <span class="info-value" id="entityName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value" id="entityType">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">File:</span>
+                            <span class="info-value" id="entityFile">-</span>
+                        </div>
+                    </div>
+                    <div class="toggle-container">
+                        <label class="toggle-label">
+                            <span>Show all rules</span>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="showAllRules">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-bg"></div>
+                            </div>
+                        </label>
+                    </div>
+                    <h3 style="margin: 20px 0 10px; color: #495057; font-size: 1rem;">Assigned Manifests</h3>
+                    <div class="manifest-list" id="currentManifests">
+                        <div class="empty-state">
+                            <p>Search for a user, machine, or group to begin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <h2>Available Manifests</h2>
+                    <div class="manifest-list" id="availableManifests">
+                        <div class="empty-state">
+                            <p>Available manifests will appear here</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <h2>Staging Area</h2>
+                    <div class="info-panel">
+                        <div class="info-item">
+                            <span class="info-label">Changes:</span>
+                            <span class="info-value" id="changeCount">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span class="info-value" id="changeStatus">No changes</span>
+                        </div>
+                    </div>
+                    <h3 style="margin: 20px 0 10px; color: #495057; font-size: 1rem;">Pending Changes</h3>
+                    <div class="manifest-list" id="stagingArea">
+                        <div class="empty-state">
+                            <p>Drag manifests here to stage changes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="resetChanges()">Reset Changes</button>
+                <button class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+                <button class="btn btn-success" onclick="createPullRequest()">Create Pull Request</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="configModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Configure Repository Path</h3>
+                <button onclick="closeConfigModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6c757d;" title="Close">
+                    ×
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; color: #6c757d;">Please select the path to your DNShield repository. The path must contain a 'manifests' directory and be a git repository.</p>
+                
+                <div id="pathSuggestions" style="margin-bottom: 20px; display: none;">
+                    <h4 style="color: #495057; font-size: 1rem; margin-bottom: 10px;">Detected Repository</h4>
+                    <div id="suggestionsList" style="max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px;">
+                        <!-- Suggestions will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Repository Path</label>
+                    <input type="text" class="form-control" id="repoPath" placeholder="/path/to/dnshield/repository">
+                    <small style="color: #6c757d; margin-top: 5px; display: block;">
+                        You can manually type the path or click a suggestion above
+                    </small>
+                </div>
+                <div id="configAlert" class="alert" style="margin-top: 15px;"></div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="detectRepository()">Detect Repository</button>
+                <button class="btn btn-success" onclick="saveRepoPath()">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="prModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Pull Request</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Branch Name</label>
+                    <input type="text" class="form-control" id="branchName" placeholder="e.g., update-manifests-john">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">PR Title</label>
+                    <input type="text" class="form-control" id="prTitle" placeholder="e.g., Update manifest assignments for john.peterson">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="prDescription" placeholder="Describe the changes made..."></textarea>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="closePRModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitPullRequest()">Submit PR</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="domainModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Domain Management</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Action</label>
+                    <select class="form-control" id="domainAction" onchange="toggleDomainFields()">
+                        <option value="view">View manifest contents</option>
+                        <option value="add">Add domains to existing manifest</option>
+                        <option value="create">Create new manifest</option>
+                        <option value="remove">Remove domains from manifest</option>
+                    </select>
+                </div>
+                
+                <div id="existingManifestGroup" class="form-group">
+                    <label class="form-label">Select Manifest</label>
+                    <select class="form-control" id="selectedManifest">
+                        <option value="">Choose manifest...</option>
+                    </select>
+                </div>
+                
+                <div id="newManifestGroup" class="form-group" style="display: none;">
+                    <label class="form-label">New Manifest Name</label>
+                    <input type="text" class="form-control" id="newManifestName" placeholder="e.g., my-custom-domains">
+                    <small style="color: #6c757d; margin-top: 5px; display: block;">
+                        Use lowercase, no spaces, hyphens or underscores allowed
+                    </small>
+                </div>
+                
+                <div id="categoryGroup" class="form-group" style="display: none;">
+                    <label class="form-label">Category</label>
+                    <select class="form-control" id="manifestCategory">
+                        <option value="domain">Domain</option>
+                        <option value="global">Global</option>
+                        <option value="group">Group</option>
+                        <option value="phishing">Phishing</option>
+                        <option value="team">Team</option>
+                    </select>
+                </div>
+                
+                <div id="domainInputGroup" class="form-group">
+                    <label class="form-label">Domains</label>
+                    <textarea class="form-control" id="domainList" rows="8" placeholder="Enter domains, one per line:&#10;example.com&#10;subdomain.example.org&#10;another-domain.net"></textarea>
+                    <small style="color: #6c757d; margin-top: 5px; display: block;">
+                        One domain per line. Subdomains and wildcards (*.example.com) are supported.
+                    </small>
+                </div>
+                
+                <div id="manifestViewGroup" class="form-group" style="display: none;">
+                    <label class="form-label">Manifest Contents</label>
+                    <div id="manifestMetadata" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none;">
+                        <h4 style="margin: 0 0 10px 0; color: #495057; font-size: 1rem;">Metadata</h4>
+                        <div id="metadataContent"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 500; color: #495057;">Domains (<span id="domainCount">0</span>)</span>
+                        <button type="button" class="btn btn-secondary" onclick="exportDomains()" style="padding: 5px 15px; font-size: 0.8rem;">Export List</button>
+                    </div>
+                    <div id="manifestContent" style="max-height: 300px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; background: #fff; font-family: monospace; font-size: 0.9rem; line-height: 1.4;">
+                        Select a manifest to view its contents...
+                    </div>
+                </div>
+                
+                <div id="domainAlert" class="alert" style="margin-top: 15px;"></div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="closeDomainModal()">Cancel</button>
+                <button id="executeBtn" class="btn btn-success" onclick="processDomainRequest()">Execute</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

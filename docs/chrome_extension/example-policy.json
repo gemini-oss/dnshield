@@ -1,0 +1,11 @@
+{
+  "authToken": {
+    "Value": "abc-123"
+  },
+  "websocketUrl": {
+    "Value": "ws://localhost:8876/ws"
+  },
+  "debug": {
+    "Value": false
+  }
+}

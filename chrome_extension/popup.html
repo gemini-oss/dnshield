@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNShield Monitor</title>
+    <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+    <div class="header">
+        <h2>DNShield Monitor</h2>
+        <div class="status" id="status">
+            <span class="status-indicator"></span>
+            <span class="status-text">Checking...</span>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value" id="blocked-count">0</div>
+            <div class="stat-label">Blocked Sites</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="recent-count">0</div>
+            <div class="stat-label">Last 24 Hours</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Recent Blocks</h3>
+        <div id="recent-blocks" class="block-list">
+            <p class="empty-state">No blocked sites yet</p>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button id="clear-history" class="btn btn-secondary">Clear History</button>
+        <button id="view-all" class="btn btn-primary">View All</button>
+    </div>
+
+    <script src="js/popup.js"></script>
+</body>
+</html>
